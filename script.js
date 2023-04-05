@@ -5,14 +5,18 @@ let operation = undefined;
 let computation = "";
 
 //constants
-const numberButtons = document.querySelectorAll("[data-number]");
-const operationButtons = document.querySelectorAll("[data-operation]");
-const equalsButton = document.querySelectorAll("[data-equals]");
-const allClearButton = document.querySelectorAll("[data-all-clear]");
-const previousOperandTextElement = document.querySelectorAll(
+const numberButtons = Array.from(document.querySelectorAll("[data-number]"));
+const operationButtons = Array.from(
+  document.querySelectorAll("[data-operation]")
+);
+const equalsButton = document.querySelector("[data-equals]");
+const allClearButton = Array.from(
+  document.querySelectorAll("[data-all-clear]")
+);
+const previousOperandTextElement = document.querySelector(
   "[data-previous-operand]"
 );
-const currentOperandTextElement = document.querySelectorAll(
+const currentOperandTextElement = document.querySelector(
   "[data-current-operand]"
 );
 
@@ -25,18 +29,18 @@ console.assert(
   operationButtons.length == 4,
   "operationButtons.length must equal to 4"
 );
-console.assert(equalsButton.length == 1, "equalsButton.length must equal to 1");
+console.assert(equalsButton !== null, "equalsButton must not be null");
 console.assert(
   allClearButton.length == 2,
   "allClearButton.length must equal to 2"
 );
 console.assert(
-  previousOperandTextElement.length == 1,
-  "previousOperandTextElement.length must equal to 1"
+  previousOperandTextElement !== null,
+  "previousOperandTextElement must not be null"
 );
 console.assert(
-  currentOperandTextElement.length == 1,
-  "currentOperandTextElement.length must equal to 1"
+  currentOperandTextElement !== null,
+  "currentOperandTextElement must not be null"
 );
 
 function clear() {
@@ -64,6 +68,8 @@ function chooseOperation(op) {
    * @param {Sring} operation The operator to be used by the cacul
    * @returns
    */
+  if (currentOperand === "" || previousOperand !== "") return;
+
   operation = op;
   previousOperand = currentOperand + op;
   currentOperand = "";
@@ -90,4 +96,38 @@ function compute() {
     default:
       return;
   }
+  currentOperand = computation;
+  operation = undefined;
+  previousOperand = "";
 }
+
+function updateDisplay() {
+  currentOperandTextElement.innerText = currentOperand;
+  previousOperandTextElement.innerText = previousOperand;
+}
+
+numberButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    appendNumber(button.innerText);
+    updateDisplay();
+  });
+});
+
+operationButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    chooseOperation(button.innerText);
+    updateDisplay();
+  });
+});
+
+equalsButton.addEventListener("click", (button) => {
+  compute();
+  updateDisplay();
+});
+
+allClearButton.forEach((button) => {
+  button.addEventListener("click", () => {
+    clear();
+    updateDisplay();
+  });
+});

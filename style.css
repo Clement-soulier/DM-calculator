@@ -23,6 +23,20 @@ button {
   grid-column: 1/5;
   grid-row: 1/2;
   background-color: black;
+  color: white;
+  text-align: right;
+  display: grid;
+  grid-template-columns: 300px;
+  grid-template-rows: 25px 50px;
+}
+
+.previous-operand {
+  font-size: 20px;
+  padding-right: 15px;
+}
+.current-operand {
+  font-size: 35px;
+  padding-right: 15px;
 }
 
 .AC_DEL_button {
